@@ -1,0 +1,22 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../features/posts/presentation/bloc/posts_bloc.dart';
+import '../../features/posts/presentation/bloc/posts_event.dart';
+import '../../features/posts/presentation/pages/posts_page.dart';
+import '../di/service_locator.dart';
+
+class AppRouter {
+  late final GoRouter router = GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => BlocProvider(
+          create: (_) => getIt<PostsBloc>()..add(FetchPosts()),
+          child: const PostsPage(),
+        ),
+      ),
+    ],
+  );
+}
