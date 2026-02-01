@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../favorites/presentation/cubit/favorites_cubit.dart';
 import '../../../posts/domain/entities/post.dart';
 import '../bloc/post_detail_bloc.dart';
+import '../bloc/post_detail_event.dart';
 import '../bloc/post_detail_state.dart';
 
 class PostDetailPage extends StatelessWidget {
@@ -47,45 +50,78 @@ class PostDetailPage extends StatelessWidget {
             Expanded(
               child: BlocBuilder<PostDetailBloc, PostDetailState>(
                 builder: (context, state) {
-                  if (state.isLoadingComments) {
+                  if (state.isLoadingComments && state.comments.isEmpty) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state.error != null) {
-                    return Center(child: Text(state.error!));
-                  } else if (state.comments.isEmpty) {
-                    return const Center(child: Text('No comments yet.'));
+                  } else if (state.error != null && state.comments.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(state.error!),
+                          const SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.read<PostDetailBloc>().add(
+                                LoadPostDetail(post),
+                              );
+                            },
+                            child: const Text('Retry'),
+                          ),
+                        ],
+                      ),
+                    );
                   }
 
-                  return ListView.separated(
-                    itemCount: state.comments.length,
-                    separatorBuilder: (context, index) => const Divider(),
-                    itemBuilder: (context, index) {
-                      final comment = state.comments[index];
-                      return ListTile(
-                        leading: const CircleAvatar(child: Icon(Icons.person)),
-                        title: Text(
-                          comment.name,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              comment.email,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(comment.body),
-                          ],
-                        ),
-                        isThreeLine: true,
+                  return RefreshIndicator(
+                    onRefresh: () {
+                      final completer = Completer();
+                      context.read<PostDetailBloc>().add(
+                        RefreshComments(post.id, completer),
                       );
+                      return completer.future;
                     },
+                    child: ListView.separated(
+                      itemCount: state.comments.isEmpty
+                          ? 1
+                          : state.comments.length,
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemBuilder: (context, index) {
+                        if (state.comments.isEmpty) {
+                          return const SizedBox(
+                            height: 200,
+                            child: Center(child: Text('No comments yet.')),
+                          );
+                        }
+                        final comment = state.comments[index];
+                        return ListTile(
+                          leading: const CircleAvatar(
+                            child: Icon(Icons.person),
+                          ),
+                          title: Text(
+                            comment.name,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                comment.email,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(comment.body),
+                            ],
+                          ),
+                          isThreeLine: true,
+                        );
+                      },
+                    ),
                   );
                 },
               ),

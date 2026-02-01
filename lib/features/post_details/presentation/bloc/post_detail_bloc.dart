@@ -10,6 +10,7 @@ class PostDetailBloc extends Bloc<PostDetailEvent, PostDetailState> {
   PostDetailBloc({required this.getCommentsUseCase})
     : super(const PostDetailState()) {
     on<LoadPostDetail>(_onLoadPostDetail);
+    on<RefreshComments>(_onRefreshComments);
   }
 
   Future<void> _onLoadPostDetail(
@@ -29,6 +30,26 @@ class PostDetailBloc extends Bloc<PostDetailEvent, PostDetailState> {
           error: 'Failed to load comments',
         ),
       );
+    }
+  }
+
+  Future<void> _onRefreshComments(
+    RefreshComments event,
+    Emitter<PostDetailState> emit,
+  ) async {
+    try {
+      final comments = await getCommentsUseCase(event.postId);
+      emit(
+        state.copyWith(
+          comments: comments,
+          isLoadingComments: false,
+          error: null,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(error: 'Failed to refresh comments'));
+    } finally {
+      event.completer?.complete();
     }
   }
 }
