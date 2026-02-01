@@ -20,7 +20,8 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     if (state is PostsLoaded && (state as PostsLoaded).hasReachedMax) return;
 
     try {
-      if (state is PostsInitial) {
+      if (state is PostsInitial || state is PostsError) {
+        _currentPage = 1;
         emit(PostsLoading());
         final posts = await getPostsUseCase(page: _currentPage, limit: _limit);
         emit(PostsLoaded(posts, hasReachedMax: posts.length < _limit));
