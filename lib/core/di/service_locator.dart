@@ -1,3 +1,4 @@
+import 'package:flutter_posts/core/native/native_notification_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,5 +75,10 @@ Future<void> setupDependencies() async {
       getFavoritesUseCase: getIt(),
       toggleFavoriteUseCase: getIt(),
     ),
+  );
+
+  // Native Notification Service
+  getIt.registerLazySingleton<NativeNotificationService>(
+    () => NativeNotificationService(),
   );
 }

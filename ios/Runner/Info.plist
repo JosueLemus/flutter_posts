@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSUserNotificationUsageDescription</key>
+<string>Postify uses notifications to inform when a post is liked.</string>
 </dict>
 </plist>

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_posts/core/native/native_notification_service.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../favorites/presentation/cubit/favorites_cubit.dart';
@@ -45,6 +47,21 @@ class _PostsPageState extends State<PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          debugPrint('🔥 FAB pressed');
+
+          final notificationService = GetIt.I<NativeNotificationService>();
+
+          debugPrint('🔥 Calling native notification');
+
+          notificationService.showLikeNotification(
+            postTitle: 'Hello from Flutter 🚀',
+          );
+        },
+        child: const Icon(Icons.notifications),
+      ),
+
       appBar: AppBar(title: const Text('Postify')),
       body: RefreshIndicator(
         onRefresh: () async {
