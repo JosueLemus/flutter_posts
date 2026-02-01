@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/posts_bloc.dart';
 import '../bloc/posts_event.dart';
@@ -82,6 +83,9 @@ class _PostsPageState extends State<PostsPage> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    onTap: () {
+                      context.push('/post_detail', extra: post);
+                    },
                   );
                 },
               );
