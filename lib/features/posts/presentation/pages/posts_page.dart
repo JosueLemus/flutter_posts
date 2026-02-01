@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../favorites/presentation/cubit/favorites_cubit.dart';
 import '../bloc/posts_bloc.dart';
 import '../bloc/posts_event.dart';
 import '../bloc/posts_state.dart';
@@ -86,6 +87,22 @@ class _PostsPageState extends State<PostsPage> {
                     onTap: () {
                       context.push('/post_detail', extra: post);
                     },
+                    trailing: BlocBuilder<FavoritesCubit, List<int>>(
+                      builder: (context, favorites) {
+                        final isFavorite = favorites.contains(post.id);
+                        return IconButton(
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : null,
+                          ),
+                          onPressed: () {
+                            context.read<FavoritesCubit>().toggleFavorite(
+                              post.id,
+                            );
+                          },
+                        );
+                      },
+                    ),
                   );
                 },
               );

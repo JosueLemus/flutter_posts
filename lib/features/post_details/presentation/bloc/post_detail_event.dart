@@ -7,5 +7,3 @@ class LoadPostDetail extends PostDetailEvent {
 
   LoadPostDetail(this.post);
 }
-
-class ToggleLike extends PostDetailEvent {}

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../favorites/presentation/cubit/favorites_cubit.dart';
 import '../../../posts/domain/entities/post.dart';
 import '../bloc/post_detail_bloc.dart';
-import '../bloc/post_detail_event.dart';
 import '../bloc/post_detail_state.dart';
 
 class PostDetailPage extends StatelessWidget {
@@ -17,17 +17,16 @@ class PostDetailPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Post Details'),
         actions: [
-          BlocBuilder<PostDetailBloc, PostDetailState>(
-            buildWhen: (previous, current) =>
-                previous.isLiked != current.isLiked,
-            builder: (context, state) {
+          BlocBuilder<FavoritesCubit, List<int>>(
+            builder: (context, favorites) {
+              final isFavorite = favorites.contains(post.id);
               return IconButton(
                 icon: Icon(
-                  state.isLiked ? Icons.favorite : Icons.favorite_border,
-                  color: state.isLiked ? Colors.red : null,
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isFavorite ? Colors.red : null,
                 ),
                 onPressed: () {
-                  context.read<PostDetailBloc>().add(ToggleLike());
+                  context.read<FavoritesCubit>().toggleFavorite(post.id);
                 },
               );
             },

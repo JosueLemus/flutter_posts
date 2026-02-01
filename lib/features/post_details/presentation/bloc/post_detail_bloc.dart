@@ -10,7 +10,6 @@ class PostDetailBloc extends Bloc<PostDetailEvent, PostDetailState> {
   PostDetailBloc({required this.getCommentsUseCase})
     : super(const PostDetailState()) {
     on<LoadPostDetail>(_onLoadPostDetail);
-    on<ToggleLike>(_onToggleLike);
   }
 
   Future<void> _onLoadPostDetail(
@@ -31,9 +30,5 @@ class PostDetailBloc extends Bloc<PostDetailEvent, PostDetailState> {
         ),
       );
     }
-  }
-
-  void _onToggleLike(ToggleLike event, Emitter<PostDetailState> emit) {
-    emit(state.copyWith(isLiked: !state.isLiked));
   }
 }
