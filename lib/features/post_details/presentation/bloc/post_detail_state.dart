@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../posts/domain/entities/post.dart';
 import '../../domain/entities/comment.dart';
 
-class PostDetailState {
+class PostDetailState extends Equatable {
   final Post? post;
   final List<Comment> comments;
   final bool isLoadingComments;
@@ -27,4 +29,7 @@ class PostDetailState {
       error: error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [post, comments, isLoadingComments, error];
 }
