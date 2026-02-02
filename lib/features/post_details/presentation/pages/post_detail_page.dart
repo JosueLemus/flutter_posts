@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_posts/core/native/native_notification_service.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../favorites/presentation/cubit/favorites_cubit.dart';
 import '../../../posts/domain/entities/post.dart';
@@ -29,6 +31,15 @@ class PostDetailPage extends StatelessWidget {
                   color: isFavorite ? Colors.red : null,
                 ),
                 onPressed: () {
+                  if (!isFavorite) {
+                    final notificationService =
+                        GetIt.I<NativeNotificationService>();
+
+                    notificationService.showLikeNotification(
+                      postTitle: post.title,
+                      body: post.body,
+                    );
+                  }
                   context.read<FavoritesCubit>().toggleFavorite(post.id);
                 },
               );
