@@ -141,21 +141,87 @@ abstract class NativeNotificationApi {
 
 ### Android Implementation (Kotlin)
 
-**File**: `android/app/src/main/kotlin/com/example/flutter_posts/MainActivity.kt`
+**Main File**: `android/app/src/main/kotlin/com/example/flutter_posts/MainActivity.kt`
 
-- Uses `NotificationManager` and `NotificationCompat`
-- Creates notification channel for Android 8.0+
-- Requests `POST_NOTIFICATIONS` permission (Android 13+)
-- Shows notification with post title and body
+**Key Features:**
+- **Notification Channel**: Creates a high-priority channel (`IMPORTANCE_HIGH`) for Android 8.0+ with vibration enabled
+- **Runtime Permissions**: Requests `POST_NOTIFICATIONS` permission for Android 13+ (API 33)
+- **Foreground & Background Support**: Notifications work in both app states
+- **Configuration**:
+  - `PRIORITY_HIGH` for immediate visibility
+  - `CATEGORY_SOCIAL` for proper notification grouping
+  - `VISIBILITY_PUBLIC` to show content on lock screen
+  - `autoCancel(true)` to dismiss on tap
+
+**Implementation Details:**
+```kotlin
+// Notification with high priority and visibility
+val notification = NotificationCompat.Builder(this, channelId)
+    .setSmallIcon(android.R.drawable.btn_star_big_on)
+    .setContentTitle(payload.title)
+    .setContentText(payload.body)
+    .setPriority(NotificationCompat.PRIORITY_HIGH)
+    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
+    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+    .setAutoCancel(true)
+    .build()
+```
 
 ### iOS Implementation (Swift)
 
-**File**: `ios/Runner/AppDelegate.swift`
+**Files**: 
+- `ios/Runner/AppDelegate.swift` - App lifecycle and foreground handling
+- `ios/Runner/NativeNotificationApiImpl.swift` - Notification logic
 
-- Uses `UNUserNotificationCenter`
-- Requests authorization on first use
-- Displays notification with post content
-- Handles permission states gracefully
+**Key Features:**
+- **Foreground Notifications**: Implemented via `UNUserNotificationCenterDelegate`
+- **Permission Handling**: Requests `.alert`, `.sound`, and `.badge` permissions
+- **iOS 14+ Support**: Uses `.banner` presentation style for modern iOS
+- **Background Support**: Notifications delivered even when app is in background
+
+**Implementation Details:**
+
+**AppDelegate.swift** - Enables foreground notifications:
+```swift
+override func userNotificationCenter(
+  _ center: UNUserNotificationCenter,
+  willPresent notification: UNNotification,
+  withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+) {
+  if #available(iOS 14.0, *) {
+    completionHandler([.banner, .sound])  // Modern banner style
+  } else {
+    completionHandler([.alert, .sound])   // Legacy alert style
+  }
+}
+```
+
+**NativeNotificationApiImpl.swift** - Notification creation:
+```swift
+func showNotification(payload: NotificationPayload) throws {
+  let content = UNMutableNotificationContent()
+  content.title = payload.title
+  content.body = payload.body
+  content.sound = .default
+  
+  let trigger = UNTimeIntervalNotificationTrigger(
+    timeInterval: 1,
+    repeats: false
+  )
+  
+  let request = UNNotificationRequest(
+    identifier: UUID().uuidString,
+    content: content,
+    trigger: trigger
+  )
+  
+  UNUserNotificationCenter.current().add(request)
+}
+```
+
+### Why This Matters
+
+**Foreground Notifications** are not shown by default on iOS. The `userNotificationCenter(_:willPresent:withCompletionHandler:)` delegate method is crucial for displaying notifications when the app is active, providing a consistent user experience across both platforms.
 
 ---
 
@@ -270,10 +336,11 @@ All tests follow the **Arrange-Act-Assert** pattern with consistent mock class d
 - **Feature implementation**: Core business logic and UI/UX decisions
 - **Initial test structure**: First test suite for posts feature was manually designed
 - **Native integration strategy**: Decision to use Pigeon over manual MethodChannel
+- **Native implementation**: Complete Android (Kotlin) and iOS (Swift) notification code, including foreground/background support
 - **Dependency injection**: GetIt setup and service registration
 
 ### Collaboration Model
-The project demonstrates a **human-led, AI-assisted** workflow where architectural decisions and critical implementations were human-driven, while AI accelerated repetitive tasks and provided suggestions for optimization.
+The project demonstrates a **human-led, AI-assisted** workflow where architectural decisions, critical implementations, and **all native platform code** were human-driven, while AI accelerated repetitive tasks and provided suggestions for optimization.
 
 ---
 
