@@ -346,30 +346,76 @@ The project demonstrates a **human-led, AI-assisted** workflow where architectur
 
 ## 🎥 Demo
 
-### Expected Demo Video Content
-
 1. **Posts List**
    - Scroll through paginated posts
+
+
+https://github.com/user-attachments/assets/dca729f6-fb93-4ed8-9acc-f2c6f9a4600c
+
+
+   
    - Pull-to-refresh functionality
+
+
+https://github.com/user-attachments/assets/3965b5c8-82eb-424d-a0ca-fef377aa09ac
+
+
+   
    - Search posts by typing in search bar
    - Toggle between filters (All / Liked / Not Liked)
+
+https://github.com/user-attachments/assets/ee0ee962-ffe6-4756-a3b9-5de42674409d
+
+
 
 2. **Post Detail**
    - Tap a post to view details
    - Scroll through comments
-   - Pull-to-refresh comments
+
+   
+
+https://github.com/user-attachments/assets/6b3a5883-fd47-4674-80b9-4118f35524cd
+
+
+
+   
 
 3. **Like Functionality**
    - Like a post from the list
    - **Native notification appears** (Android/iOS)
+
+
+https://github.com/user-attachments/assets/ae3f9646-bb04-4de9-9d99-5bfebeebeb5a
+
+
+
+https://github.com/user-attachments/assets/66a1472b-fc1a-46c8-bf8d-ddf5399a730e
+
+
+
+
    - Navigate to detail, verify like state persists
+   
+
+https://github.com/user-attachments/assets/094d9593-d349-461c-969c-e4183ad4cf4b
+
+
    - Unlike from detail screen
    - Return to list, verify state updated
 
-4. **Native Notification Evidence**
+   
+
+https://github.com/user-attachments/assets/7be79aaa-a3e9-43b4-b307-d0ce277e950e
+
+
+
+3. **Native Notification Evidence**
    - Clear visual of notification appearing in system tray
    - Notification content showing post title and body
-   - Demonstration on both Android and iOS (if possible)
+   - Demonstration on both Android and iOS 
+<img width="1320" height="2868" alt="Simulator Screenshot - iPhone 16 Pro Max - 2026-02-01 at 18 42 18" src="https://github.com/user-attachments/assets/8cd5adcb-ca18-4c76-8ba1-b2fffeceb4d2" />
+<img width="413" height="908" alt="Captura de pantalla 2026-02-02 a la(s) 2 12 16 a  m" src="https://github.com/user-attachments/assets/5546a728-c580-434e-b6cc-f54512916d68" />
+
 
 ---
 
