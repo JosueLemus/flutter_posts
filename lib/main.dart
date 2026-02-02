@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_posts/core/theme/app_theme.dart';
 
 import 'core/di/service_locator.dart';
 import 'core/router/app_router.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       create: (_) => getIt<FavoritesCubit>(),
       child: MaterialApp.router(
         title: 'Postify',
-        theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+        theme: AppTheme.lightTheme,
         routerConfig: appRouter.router,
       ),
     );
