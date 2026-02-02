@@ -18,6 +18,7 @@ import '../../features/posts/data/repositories/post_repository_impl.dart';
 import '../../features/posts/domain/repositories/post_repository.dart';
 import '../../features/posts/domain/usecases/get_posts_usecase.dart';
 import '../../features/posts/presentation/bloc/posts_bloc.dart';
+import '../../features/posts/presentation/cubit/post_filter_cubit.dart';
 import '../network/dio_client.dart';
 
 final getIt = GetIt.instance;
@@ -69,6 +70,7 @@ Future<void> setupDependencies() async {
 
   // Presentation
   getIt.registerFactory(() => PostsBloc(getPostsUseCase: getIt()));
+  getIt.registerFactory(() => PostFilterCubit());
   getIt.registerFactory(() => PostDetailBloc(getCommentsUseCase: getIt()));
   getIt.registerFactory(
     () => FavoritesCubit(
